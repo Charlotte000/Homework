@@ -1,2 +1,0 @@
-# Homework
-SPBU it homework

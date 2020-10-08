@@ -1,3 +1,4 @@
-Homework.vcxproj
-Homework.vcxproj.filters
-Homework.vcxproj.user
+Debug/
+.vs/
+*.sln
+*.vcxproj*

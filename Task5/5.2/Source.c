@@ -15,7 +15,7 @@ int main()
 	// Create stack
 	Stack* stack = createStack(0);
 	pop(&stack);
-
+	printf(">> ");
 	while (true)
 	{
 		// Scan character

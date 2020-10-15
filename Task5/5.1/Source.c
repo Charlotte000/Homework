@@ -10,6 +10,7 @@ int main()
 	Stack* stack = createStack(0);
 	pop(&stack);
 
+	printf(">> ");
 	while (true)
 	{
 		// Scan character
@@ -29,11 +30,11 @@ int main()
 		{
 			// Get two previous items 
 			if (isEmpty(&stack)) {
-				return;
+				break;
 			}
 			int value2 = pop(&stack);
 			if (isEmpty(&stack)) {
-				return;
+				break;
 			}
 			int value1 = pop(&stack);
 
@@ -67,18 +68,18 @@ int main()
 	// Print the result
 	if (isEmpty(&stack))
 	{
-		printf("Error");
+		printf("Error\n");
 	}
 	else
 	{
 		int result = pop(&stack);
 		if (isEmpty(&stack))
 		{
-			printf("%d", result);
+			printf("%d\n", result);
 		}
 		else
 		{
-			printf("Error");
+			printf("Error\n");
 		}
 	}
 }

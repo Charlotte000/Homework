@@ -40,26 +40,26 @@ int main()
 			// Do math
 			switch (character)
 			{
-				case '+':
-				{
-					push(&stack, value1 + value2);
-					break;
-				}
-				case '-':
-				{
-					push(&stack, value1 - value2);
-					break;
-				}
-				case '*':
-				{
-					push(&stack, value1 * value2);
-					break;
-				}
-				case '/':
-				{
-					push(&stack, value1 / value2);
-					break;
-				}
+			case '+':
+			{
+				push(&stack, value1 + value2);
+				break;
+			}
+			case '-':
+			{
+				push(&stack, value1 - value2);
+				break;
+			}
+			case '*':
+			{
+				push(&stack, value1 * value2);
+				break;
+			}
+			case '/':
+			{
+				push(&stack, value1 / value2);
+				break;
+			}
 			}
 		}
 	}

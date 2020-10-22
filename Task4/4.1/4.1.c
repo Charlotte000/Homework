@@ -1,16 +1,23 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <locale.h>
+#include <stdlib.h>
 
-#define SIZE sizeof(int) * 8
+#define SIZE (sizeof(int) * 8)
 
-void dec2bin(int number, bool *bin)
+bool* dec2bin(int number)
 {
+	bool *bin = malloc(sizeof(bool) * SIZE);
+	if (bin == NULL)
+	{
+		return NULL;
+	}
 	for (int i = 0; i < SIZE; i++)
 	{
 		bin[i] = (number & 1) == 1;
 		number >>= 1;
 	}
+	return bin;
 }
 
 int bin2dec(bool* bin)
@@ -34,8 +41,13 @@ void printBin(bool* bin)
 	}
 }
 
-void sumBinary(bool* binA, bool* binB, bool* binResult)
+bool* sumBinary(bool* binA, bool* binB)
 {
+	bool* binResult = malloc(sizeof(bool) * SIZE);
+	if (binResult == NULL)
+	{
+		return NULL;
+	}
 	bool memory = false;
 
 	for (int i = 0; i < SIZE; i++)
@@ -44,27 +56,25 @@ void sumBinary(bool* binA, bool* binB, bool* binResult)
 		binResult[i] = sum == 1 || sum == 3;
 		memory = sum == 3 || sum == 2;
 	}
+	return binResult;
 }
 
 bool testSumBinary()
 {
-	for (int a = 0; a < 1000; a++)
-	{
-		for (int b = 0; b < 1000; b++)
-		{
-			int actualSum = a + b;
-			bool binA[SIZE];
-			bool binB[SIZE];
-			bool binResult[SIZE];
-			dec2bin(a, binA);
-			dec2bin(b, binB);
-			sumBinary(binA, binB, binResult);
-			int givenSum = bin2dec(binResult);
+	int testCodes[3][2] = { {123, 123 }, { 0, 0 }, { -147, -741 } };
 
-			if (actualSum != givenSum)
-			{
-				return false;
-			}
+	for (int i = 0; i < 3; i++)
+	{
+		bool* binA = dec2bin(testCodes[i][0]);
+		bool* binB = dec2bin(testCodes[i][1]);
+		bool* binResult = sumBinary(binA, binB);
+		bool isPassed = bin2dec(binResult) == testCodes[i][0] + testCodes[i][1];
+		free(binA);
+		free(binB);
+		free(binResult);
+		if (!isPassed)
+		{
+			return false;
 		}
 	}
 	return true;
@@ -72,24 +82,26 @@ bool testSumBinary()
 
 int main()
 {
+	// Test
 	if (!testSumBinary())
 	{
 		printf("Test failed!");
 		return;
 	}
 	
-	int a = 5;
-	int b = -13;
-	int result;
-	bool binA[SIZE];
-	bool binB[SIZE];
-	bool binResult[SIZE];
+	// Input data
+	const int a = 5;
+	const int b = -13;
+	
+	// Convert to binary
+	bool* binA = dec2bin(a);
+	bool* binB = dec2bin(b);
 
-	dec2bin(a, binA);
-	dec2bin(b, binB);
-	sumBinary(binA, binB, binResult);
-	result = bin2dec(binResult);
+	// Calculating the sum 
+	bool* binResult = sumBinary(binA, binB);
+	int result = bin2dec(binResult);
 
+	// Print data
 	setlocale(LC_ALL, "Russian");
 	printf("%+3d в двоичной системе: ", a);
 	printBin(binA);
@@ -100,4 +112,9 @@ int main()
 	printf("Результат сложения:     ");
 	printBin(binResult);
 	printf(" = %+3d\n", result);
+
+	// Cleaning
+	free(binA);
+	free(binB);
+	free(binResult);
 }

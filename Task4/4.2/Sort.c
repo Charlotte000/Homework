@@ -1,3 +1,5 @@
+#include "Sort.h"
+
 void swapItems(int* a, int* b)
 {
 	int tmp = *a;

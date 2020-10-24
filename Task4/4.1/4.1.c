@@ -62,22 +62,19 @@ bool* sumBinary(bool* binA, bool* binB)
 bool testSumBinary()
 {
 	int testCodes[3][2] = { {123, 123 }, { 0, 0 }, { -147, -741 } };
+	bool isPassed = true;
 
 	for (int i = 0; i < 3; i++)
 	{
 		bool* binA = dec2bin(testCodes[i][0]);
 		bool* binB = dec2bin(testCodes[i][1]);
 		bool* binResult = sumBinary(binA, binB);
-		bool isPassed = bin2dec(binResult) == testCodes[i][0] + testCodes[i][1];
+		isPassed = isPassed && bin2dec(binResult) == testCodes[i][0] + testCodes[i][1];
 		free(binA);
 		free(binB);
 		free(binResult);
-		if (!isPassed)
-		{
-			return false;
-		}
 	}
-	return true;
+	return isPassed;
 }
 
 int main()

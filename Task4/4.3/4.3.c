@@ -1,6 +1,7 @@
 #define _CRT_SECURE_NO_WARNINGS
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
 
@@ -14,8 +15,16 @@ PhoneNumber createPhoneNumber(char *name, char *number)
 {
 	PhoneNumber phone;
 	phone.name = malloc(sizeof(char) * (strlen(name) + 1));
+	if (phone.name == NULL)
+	{
+		return;
+	}
 	strcpy(phone.name, name);
 	phone.number = malloc(sizeof(char) * (strlen(number) + 1));
+	if (phone.number == NULL)
+	{
+		return;
+	}
 	strcpy(phone.number, number);
 	return phone;
 }
@@ -60,16 +69,78 @@ int loadPhoneNumber(PhoneNumber phones[100])
 	return phoneCount;
 }
 
+int searchByName(PhoneNumber phones[100], int phonesCount, char name[50])
+{
+	for (int i = 0; i < phonesCount; i++)
+	{
+		if (strcmp(phones[i].name, name) == 0)
+		{
+			return i;
+		}
+	}
+	return -1;
+}
+
+int searchByNumber(PhoneNumber phones[100], int phonesCount, char number[50])
+{
+	for (int i = 0; i < phonesCount; i++)
+	{
+		if (strcmp(phones[i].number, number) == 0)
+		{
+			return i;
+		}
+	}
+	return -1;
+}
+
+bool test(void)
+{
+	bool isPassed = true;
+	PhoneNumber phones[2];
+	PhoneNumber phone1 = { "Ivan", "123" };
+	PhoneNumber phone2 = { "Vladimir", "4785" };
+	phones[0] = phone1;
+	phones[1] = phone2;
+	
+	if (searchByName(phones, 2, "Vladimir") != 1)
+	{
+		isPassed = false;
+	}
+	if (searchByName(phones, 2, "BlaBlaBla") != -1)
+	{
+		isPassed = false;
+	}
+
+	if (searchByNumber(phones, 2, "123") != 0)
+	{
+		isPassed = false;
+	}
+	if (searchByNumber(phones, 2, "BlaBlaBla") != -1)
+	{
+		isPassed = false;
+	}
+	return isPassed;
+}
+
 int main()
 {
+	if (test() != true)
+	{
+		printf("Test failed!\n");
+		return;
+	}
 	PhoneNumber phones[100];
 	int phonesCount = loadPhoneNumber(phones);
 
-	printf("0 - Exit\n1 - Create and save new phone\n2 - Get all phones\n3 - Find phone by name\n4 - Find phone by number\n");
+	printf("0 - Exit\n");
+	printf("1 - Create and save new phone\n");
+	printf("2 - Get all phones\n");
+	printf("3 - Find phone by name\n");
+	printf("4 - Find phone by number\n");
 	while (true)
 	{
-		int input;
 		printf(">> ");
+		int input;
 		scanf("%d", &input);
 		
 		switch (input)
@@ -112,13 +183,13 @@ int main()
 				char name[50];
 				printf("Search by name: ");
 				scanf("%s", name);
-				for (int i = 0; i < phonesCount; i++)
+				int index = searchByName(phones, phonesCount, name);
+				if (index != -1)
 				{
-					if (!strcmp(phones[i].name, name))
-					{
-						printf("=========\nName: %s\nNumber: %s\n=========\n", phones[i].name, phones[i].number);
-						break;
-					}
+					printf("=========\n");
+					printf("Name: %s\n", phones[index].name);
+					printf("Number: %s\n", phones[index].number);
+					printf("=========\n");
 				}
 				break;
 			}
@@ -127,13 +198,13 @@ int main()
 				char number[50];
 				printf("Search by number: ");
 				scanf("%s", number);
-				for (int i = 0; i < phonesCount; i++)
+				int index = searchByNumber(phones, phonesCount, number);
+				if (index != -1)
 				{
-					if (!strcmp(phones[i].number, number))
-					{
-						printf("Name: %s\nNumber: %s\n=========\n", phones[i].name, phones[i].number);
-						break;
-					}
+					printf("=========\n");
+					printf("Name: %s\n", phones[index].name);
+					printf("Number: %s\n", phones[index].number);
+					printf("=========\n");
 				}
 				break;
 			}

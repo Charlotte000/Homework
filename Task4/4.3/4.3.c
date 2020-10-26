@@ -140,7 +140,7 @@ int main()
 	while (true)
 	{
 		printf(">> ");
-		int input;
+		int input = 0;
 		scanf("%d", &input);
 		
 		switch (input)

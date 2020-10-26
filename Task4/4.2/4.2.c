@@ -37,7 +37,7 @@ int main()
 	int index = arraySize - 1;
 	while (!feof(file))
 	{
-		int number;
+		int number = 0;
 		fscanf(file, "%d", &number);
 		items[index] = number;
 		index--;
@@ -70,5 +70,8 @@ int main()
 	// Print
 	setlocale(LC_ALL, "Russian");
 	printf("Самый частый элемент: %d\nКоличество данного элемента: %d\n", maxValue, maxCount + 1);
+
+	// Cleaning
+	free(items);
 
 }

@@ -1,3 +1,4 @@
+#include "Stack.h"
 #include <stdbool.h>
 #include <stdlib.h>
 
@@ -7,10 +8,6 @@ typedef struct StackElement
 	struct StackElement* next;
 } StackElement;
 
-typedef struct Stack
-{
-	StackElement* head;
-} Stack;
 
 bool isEmpty(Stack* stack)
 {

@@ -23,6 +23,7 @@ PhoneNumber createPhoneNumber(char *name, char *number)
 	phone.number = malloc(sizeof(char) * (strlen(number) + 1));
 	if (phone.number == NULL)
 	{
+		free(phone.name);
 		return;
 	}
 	strcpy(phone.number, number);
@@ -96,29 +97,18 @@ int searchByNumber(PhoneNumber phones[100], int phonesCount, char number[50])
 bool test(void)
 {
 	bool isPassed = true;
-	PhoneNumber phones[2];
-	PhoneNumber phone1 = { "Ivan", "123" };
-	PhoneNumber phone2 = { "Vladimir", "4785" };
-	phones[0] = phone1;
-	phones[1] = phone2;
-	
-	if (searchByName(phones, 2, "Vladimir") != 1)
-	{
-		isPassed = false;
-	}
-	if (searchByName(phones, 2, "BlaBlaBla") != -1)
-	{
-		isPassed = false;
-	}
-
-	if (searchByNumber(phones, 2, "123") != 0)
-	{
-		isPassed = false;
-	}
-	if (searchByNumber(phones, 2, "BlaBlaBla") != -1)
-	{
-		isPassed = false;
-	}
+	PhoneNumber phones[100];
+	loadPhoneNumber(phones);
+	isPassed = isPassed && strcmp(phones[0].name, "Ivan") == 0;
+	isPassed = isPassed && strcmp(phones[0].number, "224455") == 0;
+	isPassed = isPassed && strcmp(phones[1].name, "Vladimir") == 0;
+	isPassed = isPassed && strcmp(phones[1].number, "984534") == 0;
+	isPassed = isPassed && searchByName(phones, 2, "Vladimir") == 1;
+	isPassed = isPassed && searchByName(phones, 2, "BlaBlaBla") == -1;
+	isPassed = isPassed && searchByNumber(phones, 2, "224455") == 0;
+	isPassed = isPassed && searchByNumber(phones, 2, "BlaBlaBla") == -1;
+	PhoneNumber newPhone = createPhoneNumber("Ramil", "47234");
+	savePhoneNumber(newPhone, 2);
 	return isPassed;
 }
 

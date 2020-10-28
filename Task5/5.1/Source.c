@@ -2,10 +2,43 @@
 #include "Stack.h"
 #include <stdio.h>
 #include <ctype.h>
-#include <stdlib.h>
+#include <stdbool.h>
+
+bool test(void)
+{
+	bool isPassed = true;
+	Stack* stack = createStack();
+	int value1, value2;
+	push(stack, 1);
+	push(stack, 5);
+	value2 = pop(stack);
+	value1 = pop(stack);
+	isPassed = isPassed && (value1 + value2 == 6);
+
+	push(stack, 6);
+	push(stack, 2);
+	value2 = pop(stack);
+	value1 = pop(stack);
+	isPassed = isPassed && (value1 / value2 == 3);
+
+	push(stack, 7);
+	push(stack, 3);
+	value2 = pop(stack);
+	value1 = pop(stack);
+	isPassed = isPassed && (value1 * value2 == 21);
+
+	deleteStack(&stack);
+	return isPassed;
+}
 
 int main()
 {
+	if (!test())
+	{
+		printf("Test Failed");
+		return;
+	}
+
 	// Create stack
 	Stack* stack = createStack();
 

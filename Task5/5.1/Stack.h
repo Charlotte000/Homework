@@ -1,7 +1,11 @@
 #pragma once
 #include <stdbool.h>
 
-typedef Stack;
+typedef struct
+{
+	struct StackElement* head;
+} Stack;
+
 
 // Add new stack's head
 void push(Stack* stack, int value);

@@ -30,12 +30,22 @@ PhoneNumber createPhoneNumber(char *name, char *number)
 	return phone;
 }
 
-void savePhoneNumber(PhoneNumber phone, int phonesCount)
+void deletePhoneNumber(PhoneNumber* phone)
 {
+	free(phone->name);
+	free(phone->number);
+}
+
+bool savePhoneNumber(PhoneNumber phone, int phonesCount)
+{
+	if (phone.name == NULL || phone.number == NULL)
+	{
+		return false;
+	}
 	FILE* file = fopen("data.txt", "a");
 	if (file == NULL)
 	{
-		return -1;
+		return false;
 	}
 
 	if (phonesCount > 0)
@@ -46,6 +56,7 @@ void savePhoneNumber(PhoneNumber phone, int phonesCount)
 	fputs("\n", file);
 	fputs(phone.number, file);
 	fclose(file);
+	return true;
 }
 
 int loadPhoneNumber(PhoneNumber phones[100])
@@ -108,13 +119,19 @@ bool test(void)
 	isPassed = isPassed && searchByNumber(phones, 2, "224455") == 0;
 	isPassed = isPassed && searchByNumber(phones, 2, "BlaBlaBla") == -1;
 	PhoneNumber newPhone = createPhoneNumber("Ramil", "47234");
-	savePhoneNumber(newPhone, 2);
+	isPassed = isPassed && savePhoneNumber(newPhone, 2);
+
+	for (int i = 0; i < 2; i++)
+	{
+		deletePhoneNumber(&phones[i]);
+	}
+	deletePhoneNumber(&newPhone);
 	return isPassed;
 }
 
 int main()
 {
-	if (test() != true)
+	if (!test())
 	{
 		printf("Test failed!\n");
 		return;
@@ -135,7 +152,14 @@ int main()
 		
 		switch (input)
 		{
-			case 0: return;
+			case 0: 
+			{
+				for (int i = 0; i < phonesCount; i++)
+				{
+					deletePhoneNumber(&phones[i]);
+				}
+				return;
+			}
 			case 1:
 			{
 				if (phonesCount == 99)
@@ -155,8 +179,14 @@ int main()
 				phones[phonesCount] = phone;
 				phonesCount++;
 
-				savePhoneNumber(phone, phonesCount);
-				printf("Saved\n");
+				if (savePhoneNumber(phone, phonesCount))
+				{
+					printf("Saved\n");
+				}
+				else
+				{
+					printf("Error\n");
+				}
 				break;
 			}
 			case 2:

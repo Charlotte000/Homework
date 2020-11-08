@@ -1,73 +1,55 @@
 #define _CRT_SECURE_NO_WARNINGS
 
+#include "CyclicArray.h"
 #include <stdio.h>
 #include <stdbool.h>
-#include <stdlib.h>
 
-typedef struct Warrior
+CyclicArray* createWarriors(int n)
 {
-	struct Warrior* next;
-	int index;
-} Warrior;
-
-Warrior* createWarriors(int n)
-{
-	Warrior** warriors = malloc(sizeof(Warrior*) * n);
-	if (warriors == NULL)
-	{
-		return NULL;
-	}
-
+	CyclicArray* head = createArray();
 	for (int i = 0; i < n; i++)
 	{
-		warriors[i] = malloc(sizeof(Warrior));
-		if (warriors[i] == NULL)
-		{
-			return NULL;
-		}
-		warriors[i]->next = NULL;
-		warriors[i]->index = i;
+		addElement(head, i);
 	}
-
-	for (int i = 0; i < n; i++)
-	{
-		warriors[i]->next = warriors[(i + 1) % n];
-	}
-	return warriors[0];
+	return head;
 }
 
-void deleteWarrior(Warrior** head, int* n)
+int getNumber(int n, int m)
 {
-	Warrior* prev = *head;
-	for (int i = 0; i < (*n) - 1; i++)
+	CyclicArray* head = createWarriors(n);
+	CyclicArray* cursor = head;
+	int counter = 0;
+	while (getSize(head) > 1)
 	{
-		prev = prev->next;
+		counter++;
+		cursor = cursor->next;
+
+		if (counter == m)
+		{
+			deleteElement(&head, cursor->prev->value);
+			counter = 0;
+		}
 	}
-	prev->next = (*head)->next;
-	free(*head);
-	*head = prev->next;
-	(*n)--;
-	if (*n == 0)
-	{
-		*head = NULL;
-	}
+	int result = cursor->value;
+	deleteArray(&head);
+	return result + 1;
 }
 
 bool test(void)
 {
 	bool isPassed = true;
-
-	int n = 3;
-	Warrior* head = createWarriors(n);
-	isPassed = isPassed && head->index == 0 && head->next->next->next->index == 0;
-
-	deleteWarrior(&head, &n);
-	isPassed = isPassed && head->index == 1 && head->next->next->index == 1;
-
-	deleteWarrior(&head, &n);
-	deleteWarrior(&head, &n);
+	CyclicArray* head = createArray();
+	addElement(head, 1);
+	addElement(head, 2);
+	addElement(head, 3);
+	isPassed = isPassed && head->value == 1 && head->next->value == 2 && head->next->next->value == 3 && head->next->next->next->value == 1;
+	deleteElement(&head, 1);
+	isPassed = isPassed && head->value == 2 && head->next->value == 3 && head->next->next->value == 2;
+	deleteArray(&head);
 	isPassed = isPassed && head == NULL;
-
+	isPassed = isPassed && getNumber(3, 2) == 3;
+	isPassed = isPassed && getNumber(5, 3) == 4;
+	isPassed = isPassed && getNumber(20, 7) == 3;
 	return isPassed;
 }
 
@@ -75,34 +57,14 @@ int main()
 {
 	if (!test())
 	{
-		printf("Test failed!\n");
+		printf("Test Failed\n");
 		return;
 	}
-
 	int n = 0;
 	int m = 0;
 	printf("Input n: ");
 	scanf("%d", &n);
 	printf("Input m: ");
 	scanf("%d", &m);
-
-	Warrior* head = createWarriors(n);
-
-	int counter = 0;
-	while (n > 1)
-	{
-		counter++;
-
-		if (counter == m)
-		{
-			deleteWarrior(&head, &n);
-			counter = 0;
-		}
-		else
-		{
-			head = head->next;
-		}
-	}
-
-	printf("You should be %d in a row", head->index + 1);
+	printf("%d", getNumber(n, m));
 }

@@ -2,6 +2,8 @@
 #include "Stack.h"
 #include <stdio.h>
 #include <stdbool.h>
+#include <string.h>
+#include <stdlib.h>
 
 enum Bracket
 {
@@ -24,7 +26,44 @@ int identifyBracket(char character)
 		case ']':
 			return SQUARE;
 	}
-	return;
+	return -1;
+}
+
+bool checkExpression(char* string)
+{
+	Stack* stack = createStack();
+	for (size_t i = 0; i < strlen(string); i++)
+	{
+		char character = string[i];
+		switch (character)
+		{
+			// Put element in stack list
+			case '(':
+			case '{':
+			case '[':
+			{
+				push(stack, identifyBracket(character));
+				break;
+			}
+
+			// Pull element in stack list
+			case ')':
+			case '}':
+			case ']':
+			{
+				int prev = pop(stack);
+				if (prev != identifyBracket(character))
+				{
+					deleteStack(&stack);
+					return false;
+				}
+				break;
+			}
+		}
+	}
+	bool isCorrect = isEmpty(stack);
+	deleteStack(&stack);
+	return isCorrect;
 }
 
 bool test(void)
@@ -39,6 +78,8 @@ bool test(void)
 	isPassed = isPassed && pop(stack) == SQUARE;
 	isPassed = isPassed && pop(stack) == ROUND;
 	isPassed = isPassed && isEmpty(stack);
+	isPassed = isPassed && checkExpression("({})[]");
+	isPassed = isPassed && !checkExpression("([)])");
 	deleteStack(&stack);
 	return isPassed;
 }
@@ -50,49 +91,21 @@ int main()
 		printf("Test Failed");
 		return;
 	}
-
-	// Create stack
-	Stack* stack = createStack();
-	printf(">> ");
-	while (true)
+	char* string = malloc(sizeof(char) * 100);
+	if (string == NULL)
 	{
-		// Scan character
-		char character = ' ';
-		scanf("%c", &character);
-		switch (character)
-		{
-
-			// Put element in stack list
-			case '(':
-			case '{':
-			case '[': 
-			{
-				push(stack, identifyBracket(character));
-				break;
-			}
-
-			// Pull element in stack list
-			case ')':
-			case '}':
-			case ']':
-			{
-				int prev = pop(stack);
-				if (prev != identifyBracket(character))
-				{
-					printf("Wrong\n");
-					deleteStack(&stack);
-					return;
-				}
-				break;
-			}
-
-			// Print the result
-			case '\n':
-			{
-				printf(isEmpty(stack) ? "Correct\n" : "Wrong\n");
-				deleteStack(&stack);
-				return;
-			}
-		}
+		return;
 	}
+
+	printf(">> ");
+	scanf("%[^\n]s", string);
+	if (checkExpression(string))
+	{
+		printf("Correct\n");
+	}
+	else
+	{
+		printf("Wrong\n");
+	}
+	free(string);
 }

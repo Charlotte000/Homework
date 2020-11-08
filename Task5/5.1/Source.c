@@ -8,7 +8,8 @@ bool test(void)
 {
 	bool isPassed = true;
 	Stack* stack = createStack();
-	int value1, value2;
+	int value1 = 0;
+	int value2 = 0;
 	push(stack, 1);
 	push(stack, 5);
 	value2 = pop(stack);

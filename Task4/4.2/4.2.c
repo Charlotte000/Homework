@@ -31,6 +31,39 @@ int getMostFrequent(int* items, int arraySize)
 	return maxValue;
 }
 
+int getNumberOfItems(FILE* file)
+{
+	int arraySize = 0;
+	while (!feof(file))
+	{
+		fscanf(file, "%*d");
+		arraySize++;
+	}
+	rewind(file);
+	return arraySize;
+}
+
+int* countCharacters(FILE* file, int arraySize)
+{
+	int* items = malloc(sizeof(int) * arraySize);
+	if (items == NULL)
+	{
+		printf("Failed. Try again");
+		return NULL;
+	}
+
+	int index = arraySize - 1;
+	while (!feof(file))
+	{
+		int number = 0;
+		fscanf(file, "%d", &number);
+		items[index] = number;
+		index--;
+	}
+	rewind(file);
+	return items;
+}
+
 bool test(void)
 {
 	bool isPassed = true;
@@ -44,13 +77,15 @@ bool test(void)
 
 int main()
 {
+	setlocale(LC_ALL, "Russian");
+
 	if (!test())
 	{
 		printf("Test failed");
 		return;
 	}
 
-	// ==Read file==
+	// Read file
 	FILE* file = fopen("data4.2.txt", "r");
 	if (file == NULL)
 	{
@@ -58,42 +93,17 @@ int main()
 		return;
 	}
 
-	// Get number of items
-	int arraySize = 0;
-	while (!feof(file))
+	int arraySize = getNumberOfItems(file);
+	int* items = countCharacters(file, arraySize);
+	if (items != NULL)
 	{
-		fscanf(file, "%*d");
-		arraySize++;
+		int maxValue = getMostFrequent(items, arraySize);
+		printf("Самый частый элемент: %d\n", maxValue);
+		free(items);
 	}
-	rewind(file);
-
-	// Create array
-	int* items = malloc(sizeof(int) * arraySize);
-	if (items == NULL)
+	else
 	{
-		fclose(file);
-		printf("Failed. Try again");
-		return;
-	}
-
-	// Fill array
-	int index = arraySize - 1;
-	while (!feof(file))
-	{
-		int number = 0;
-		fscanf(file, "%d", &number);
-		items[index] = number;
-		index--;
+		printf("Error. Try again");
 	}
 	fclose(file);
-
-	int maxValue = getMostFrequent(items, arraySize);
-
-	// Print
-	setlocale(LC_ALL, "Russian");
-	printf("Самый частый элемент: %d\n", maxValue);
-
-	// Cleaning
-	free(items);
-
 }

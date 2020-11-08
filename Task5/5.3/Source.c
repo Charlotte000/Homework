@@ -29,12 +29,17 @@ int getLevelOfOperator(char character)
 	return -1;
 }
 
-char* infix2postfix(char expression[100])
+char* infix2postfix(char* expression)
 {
 	Stack* stack = createStack();
 
-	char postfix[100];
-	for (int i = 0; i < (int) strlen(expression); i++)
+	char* postfix = malloc(sizeof(char) * 100);
+	if (postfix == NULL)
+	{
+		return NULL;
+	}
+	int postfixIndex = 0;
+	for (size_t i = 0; i < strlen(expression); i++)
 	{
 		char character = expression[i];
 		if (character == ' ')
@@ -44,7 +49,9 @@ char* infix2postfix(char expression[100])
 
 		if (isdigit(character))
 		{
-			strcat(postfix, &character);
+			postfix[postfixIndex] = character;
+			postfix[postfixIndex + 1] = ' ';
+			postfixIndex += 2;
 		}
 		else if (character == '(')
 		{
@@ -61,9 +68,10 @@ char* infix2postfix(char expression[100])
 				{
 					if (prevChar != '(' && prevChar != ')')
 					{
-						strcat(postfix, &prevChar);
+						postfix[postfixIndex] = prevChar;
+						postfix[postfixIndex + 1] = ' ';
+						postfixIndex += 2;
 					}
-					pop(stack);
 				}
 				else
 				{
@@ -80,15 +88,52 @@ char* infix2postfix(char expression[100])
 		char currentChar = (char) pop(stack);
 		if (currentChar != '(' && currentChar != ')')
 		{
-			strcat(postfix, &currentChar);
+			postfix[postfixIndex] = currentChar;
+			postfix[postfixIndex + 1] = ' ';
+			postfixIndex += 2;
 		}
 	}
+	postfix[postfixIndex] = '\0';
 	deleteStack(&stack);
 	return postfix;
 }
 
+bool test(void)
+{
+	bool isPassed = true;
+
+	char* answer = infix2postfix("1 + 2");
+	isPassed = isPassed && strcmp(answer, "1 2 + ") == 0;
+	free(answer);
+
+	answer = infix2postfix("2 / (1+2)");
+	isPassed = isPassed && strcmp(answer, "2 1 2 + / ") == 0;
+	free(answer);
+
+	answer = infix2postfix("(1 + 2 * (3 - 4)) / (5 * 6 / (7 + 8))");
+	isPassed = isPassed && strcmp(answer, "1 2 3 4 - * + 5 6 * 7 8 + / / ") == 0;
+	free(answer);
+	return isPassed;
+}
+
 int main()
 {
-	char infix[100] = "( 2 + 3 ) / ( 3 * ( 1 + 1 ) )";
-	infix2postfix(infix);
+	if (!test())
+	{
+		printf("Test Failed");
+		return;
+	}
+
+	char* infix = malloc(sizeof(char) * 100);
+	if (infix == NULL)
+	{
+		return;
+	}
+	printf(">> ");
+	scanf("%[^\n]s", infix);
+	char* postfix = infix2postfix(infix);
+	printf("%s", postfix);
+
+	free(infix);
+	free(postfix);
 }

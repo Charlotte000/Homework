@@ -30,19 +30,19 @@ bool test(void)
 	push(list, 1);
 	
 	invertedList = invert(list);
-	isPassed = isPassed && invertedList->head->value == 1 && invertedList->length == 1;
+	isPassed = isPassed && get(invertedList, 0) == 1;
 	deleteList(&invertedList);
 
 	push(list, 2);
 
 	invertedList = invert(list);
-	isPassed = isPassed && invertedList->head->value == 2 && invertedList->head->next->value == 1 && invertedList->length == 2;
+	isPassed = isPassed && get(invertedList, 0) == 2 && get(invertedList, 1) == 1;
 	deleteList(&invertedList);
 
 	push(list, 3);
 
 	invertedList = invert(list);
-	isPassed = isPassed && invertedList->head->value == 3 && invertedList->head->next->next->value == 1;
+	isPassed = isPassed && get(invertedList, 0) == 3 && get(invertedList, 1) == 2 && get(invertedList, 2) == 1;
 	deleteList(&invertedList);
 
 	deleteList(&list);

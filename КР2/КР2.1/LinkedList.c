@@ -3,6 +3,18 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+typedef struct ListElement
+{
+	int value;
+	struct ListElement* next;
+} ListElement;
+
+typedef struct LinkedList
+{
+	int length;
+	ListElement* head;
+} LinkedList;
+
 bool isEmpty(LinkedList* list)
 {
 	return list->length == 0;

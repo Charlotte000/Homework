@@ -1,17 +1,7 @@
 #pragma once
 #include <stdbool.h>
 
-typedef struct ListElement
-{
-	int value;
-	struct ListElement* next;
-} ListElement;
-
-typedef struct LinkedList
-{
-	int length;
-	ListElement* head;
-} LinkedList;
+typedef struct LinkedList LinkedList;
 
 bool isEmpty(LinkedList* list);
 

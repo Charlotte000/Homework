@@ -108,10 +108,21 @@ int get(LinkedList* list, int index)
 LinkedList* invert(LinkedList* list)
 {
 	LinkedList* newList = createList();
-	for (int i = list->length - 1; i >= 0; i--)
+	ListElement* cursor = list->head;
+	for (int i = 0; i < list->length; i++)
 	{
-		push(newList, get(list, i));
+		ListElement* newElement = malloc(sizeof(ListElement));
+		if (newElement == NULL)
+		{
+			return;
+		}
+		newElement->value = cursor->value;
+		cursor = cursor->next;
+		ListElement* oldHead = newList->head;
+		newList->head = newElement;
+		newList->head->next = oldHead;
 	}
+	newList->length = list->length;
 	return newList;
 }
 

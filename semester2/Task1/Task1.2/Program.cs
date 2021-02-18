@@ -16,8 +16,8 @@ namespace Task1._2
             }
             Console.Write("Input string:\t");
             string input = Console.ReadLine();
-            string btw = BTW(input);
-            string reverse = ReversedBTW(btw);
+            string btw = BWT(input);
+            string reverse = ReversedBWT(btw);
             Console.WriteLine($"Encoded string:\t{btw}");
             Console.WriteLine($"Decoded string:\t{reverse}");
         }
@@ -25,18 +25,18 @@ namespace Task1._2
         static bool Test()
         {
             bool isPassed = true;
-            isPassed = isPassed && ReversedBTW(BTW("hello")) == "hello";
-            isPassed = isPassed && ReversedBTW(BTW("banana")) == "banana";
-            isPassed = isPassed && ReversedBTW(BTW("abcabc")) == "abcabc";
-            isPassed = isPassed && ReversedBTW(BTW("ananas")) == "ananas";
-            isPassed = isPassed && ReversedBTW(BTW("mississippi")) == "mississippi";
+            isPassed = isPassed && ReversedBWT(BWT("hello")) == "hello";
+            isPassed = isPassed && ReversedBWT(BWT("banana")) == "banana";
+            isPassed = isPassed && ReversedBWT(BWT("abcabc")) == "abcabc";
+            isPassed = isPassed && ReversedBWT(BWT("ananas")) == "ananas";
+            isPassed = isPassed && ReversedBWT(BWT("mississippi")) == "mississippi";
             return isPassed;
         }
 
-        static string BTW(string input)
+        static string BWT(string input)
         {
             input += StopCharacter;
-            char[][] array = new char[input.Length][];
+            var array = new char[input.Length][];
             for (int i = 0; i < input.Length; i++)
             {
                 array[i] = new char[input.Length];
@@ -60,18 +60,18 @@ namespace Task1._2
                 }
             }
 
-            sortTable(array);
+            SortTable(array);
 
-            char[] output = new char[input.Length];
+            var output = new char[input.Length];
             for (int i = 0; i < input.Length; i++)
             {
                 output[i] = array[i][input.Length - 1];
             }
             return new string(output);
         }
-        static string ReversedBTW(string input)
+        static string ReversedBWT(string input)
         {
-            char[][] array = new char[input.Length][];
+            var array = new char[input.Length][];
             for (int i = 0; i < input.Length; i++)
             {
                 array[i] = new char[input.Length];
@@ -83,17 +83,17 @@ namespace Task1._2
                 {
                     array[input.Length - 1 - i][j] = input[j];
                 }
-                sortTable2(array, input.Length - 1 - i);
+                SortTable2(array, input.Length - 1 - i);
             }
 
-            char[] result = new char[input.Length - 1];
+            var result = new char[input.Length - 1];
             for (int i = 1; i < input.Length; i++)
             {
                 result[i - 1] = array[i][0];
             }
             return new string(result);
         }
-        static void sortTable(char[][] array)
+        static void SortTable(char[][] array)
         {
             for (int compare1 = 0; compare1 < array.Length; compare1++)
             {
@@ -116,7 +116,7 @@ namespace Task1._2
                 }
             }
         }
-        static void sortTable2(char[][] array, int lineIndex)
+        static void SortTable2(char[][] array, int lineIndex)
         {
             for (int compare1 = 0; compare1 < array[0].Length; compare1++)
             {

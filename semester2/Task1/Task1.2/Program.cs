@@ -16,9 +16,9 @@ namespace Task1._2
             }
             Console.Write("Input string:\t");
             string input = Console.ReadLine();
-            string btw = BWT(input);
-            string reverse = ReversedBWT(btw);
-            Console.WriteLine($"Encoded string:\t{btw}");
+            string bwt = BWT(input);
+            string reverse = ReversedBWT(bwt);
+            Console.WriteLine($"Encoded string:\t{bwt}");
             Console.WriteLine($"Decoded string:\t{reverse}");
         }
 
@@ -41,11 +41,7 @@ namespace Task1._2
             {
                 array[i] = new char[input.Length];
             }
-
-            for (int i = 0; i < input.Length; i++)
-            {
-                array[0][i] = input[i];
-            }
+            array[0] = input.ToCharArray();
 
             for (int i = 1; i < input.Length; i++)
             {
@@ -69,13 +65,10 @@ namespace Task1._2
             }
             return new string(output);
         }
+
         static string ReversedBWT(string input)
         {
-            var array = new char[input.Length];
-            for (int i = 0; i < input.Length; i++)
-            {
-                array[i] = input[i];
-            }
+            var array = input.ToCharArray();
 
             int[] permutation = GetPermutation(input);
 
@@ -83,7 +76,7 @@ namespace Task1._2
             var result = new char[input.Length - 1];
             for (int i = 0; i < input.Length; i++)
             {
-                for (int j = 0;j < input.Length; j++)
+                for (int j = 0; j < input.Length; j++)
                 {
                     newArray[permutation[j]] = array[j];
                 }
@@ -99,6 +92,7 @@ namespace Task1._2
             }
             return new string(result);
         }
+
         static void SortTable(char[][] array)
         {
             for (int compare1 = 0; compare1 < array.Length; compare1++)
@@ -122,13 +116,10 @@ namespace Task1._2
                 }
             }
         }
+
         static int[] GetPermutation(string input)
         {
-            var array = new char[input.Length];
-            for (int i = 0; i < input.Length; i++)
-            {
-                array[i] = input[i];
-            }
+            var array = input.ToCharArray();
             var permutation = new int[input.Length];
 
             for (int i = 0; i < input.Length; i++)

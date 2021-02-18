@@ -49,8 +49,8 @@ namespace Task1._1
 
             Console.Write("Input numbers: ");
             string input = Console.ReadLine();
-            string[] strNumbers = input.Split(' ');
-            int[] numbers = new int[strNumbers.Length];
+            string[] strNumbers = input.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+            var numbers = new int[strNumbers.Length];
 
             for (int i = 0; i < strNumbers.Length; i++)
             {

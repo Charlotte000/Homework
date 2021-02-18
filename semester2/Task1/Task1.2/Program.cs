@@ -71,25 +71,31 @@ namespace Task1._2
         }
         static string ReversedBWT(string input)
         {
-            var array = new char[input.Length][];
+            var array = new char[input.Length];
             for (int i = 0; i < input.Length; i++)
             {
-                array[i] = new char[input.Length];
+                array[i] = input[i];
             }
 
+            int[] permutation = GetPermutation(input);
+
+            var newArray = new char[input.Length];
+            var result = new char[input.Length - 1];
             for (int i = 0; i < input.Length; i++)
             {
+                for (int j = 0;j < input.Length; j++)
+                {
+                    newArray[permutation[j]] = array[j];
+                }
+
                 for (int j = 0; j < input.Length; j++)
                 {
-                    array[input.Length - 1 - i][j] = input[j];
+                    array[j] = newArray[j];
                 }
-                SortTable2(array, input.Length - 1 - i);
-            }
-
-            var result = new char[input.Length - 1];
-            for (int i = 1; i < input.Length; i++)
-            {
-                result[i - 1] = array[i][0];
+                if (i != 0)
+                {
+                    result[i - 1] = array[0];
+                }
             }
             return new string(result);
         }
@@ -116,31 +122,32 @@ namespace Task1._2
                 }
             }
         }
-        static void SortTable2(char[][] array, int lineIndex)
+        static int[] GetPermutation(string input)
         {
-            for (int compare1 = 0; compare1 < array[0].Length; compare1++)
+            var array = new char[input.Length];
+            for (int i = 0; i < input.Length; i++)
             {
-                for (int compare2 = 0; compare2 < compare1 + 1; compare2++)
+                array[i] = input[i];
+            }
+            var permutation = new int[input.Length];
+
+            for (int i = 0; i < input.Length; i++)
+            {
+                int minIndex = -1;
+                for (int j = 0; j < input.Length; j++)
                 {
-                    for (int k = lineIndex; k < array.Length; k++)
+                    if (array[j] != '\0')
                     {
-                        if (array[k][compare1] < array[k][compare2])
+                        if (minIndex == -1 || array[minIndex] > array[j])
                         {
-                            for (int l = lineIndex; l < array.Length; l++)
-                            {
-                                char temp = array[l][compare1];
-                                array[l][compare1] = array[l][compare2];
-                                array[l][compare2] = temp;
-                            }
-                            break;
-                        }
-                        else if (array[k][compare1] > array[k][compare2])
-                        {
-                            break;
+                            minIndex = j;
                         }
                     }
                 }
+                permutation[minIndex] = i;
+                array[minIndex] = '\0';
             }
+            return permutation;
         }
     }
 }

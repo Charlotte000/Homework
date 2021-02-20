@@ -12,25 +12,25 @@ namespace Task2._1
                 if (args[0] == "-c" || args[1] == "-c")
                 {
                     string path = args[0] == "-c" ? args[1] : args[0];
-                    string uncompressed = File.ReadAllText(path);
-                    string compressed = LZWalgoritm.Compress(uncompressed);
-
-                    string compressedPath = Path.ChangeExtension(path, "zipped");
-                    File.WriteAllText(compressedPath, compressed);
+                    LZWalgoritm.Compress(path);
+                    FileInfo origin = new FileInfo(path);
+                    int originLength = (int)origin.Length;
+                    FileInfo compressed = new FileInfo(Path.ChangeExtension(path, "zipped"));
+                    int compressedLength = (int)compressed.Length;
+                    Console.WriteLine($"Compression ratio: {Math.Round((float) originLength / compressedLength, 3)}");
                 }
                 else if (args[0] == "-u" || args[1] == "-u")
                 {
                     string path = args[0] == "-u" ? args[1] : args[0];
-                    string compressed = File.ReadAllText(path);
-                    string uncompressed = LZWalgoritm.Decompress(compressed);
-
-                    string uncompressedPath = Path.ChangeExtension(path, "txt");
-                    File.WriteAllText(uncompressedPath, uncompressed);
-
+                    LZWalgoritm.Decompress(path);
                 }
             }
-
-
+            else
+            {
+                Console.WriteLine("Welcome to Lempel–Ziv–Welch data compression program.");
+                Console.WriteLine("-c filepath  :To compress file");
+                Console.WriteLine("-u filepath  :To uncompress file");
+            }
         }
     }
 }

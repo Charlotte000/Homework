@@ -1,14 +1,17 @@
-﻿namespace Task2._1
+﻿using System.IO;
+
+namespace Task2._1
 {
     class LZWalgoritm
     {
-
-        static public string Compress(string input)
+        static public void Compress(string path)
         {
+            string input = File.ReadAllText(path);
+            string compressedPath = Path.ChangeExtension(path, "zipped");
+            FileStream file = File.OpenWrite(compressedPath);
             Trie head = new Trie();
             Trie cursor = head;
             int index = 0;
-            string result = "";
             for (int charIndex = 0; charIndex < input.Length; charIndex++)
             {
                 bool isExists = false;
@@ -23,39 +26,48 @@
                 }
                 if (!isExists || charIndex == input.Length - 1)
                 {
-                    cursor.AddChild(input[charIndex]).value = index;
+                    cursor.AddChild(input[charIndex]).value = index++;
                     if (cursor.parent != null && charIndex != input.Length - 1)
                     {
-                        result += $"{cursor.value}\t{input[charIndex]}\t\t";
+                        file.WriteByte((byte)cursor.value);
                     }
                     else
                     {
-                        result += $"-1\t{input[charIndex]}\t\t";
+                        file.WriteByte(255);
                     }
-                    index++;
+                    file.WriteByte((byte)input[charIndex]);
                     cursor = head;
                 }
             }
-            return result.Remove(result.Length - 2, 2);
+            file.Close();
         }
 
-        static public string Decompress(string input)
+        static public void Decompress(string path)
         {
-            string[] dictionary = input.Split("\t\t");
+            FileStream fileRead = File.OpenRead(path);
+            string uncompressedPath = Path.ChangeExtension(path, "txt");
 
-            string result = "";
-            for (int i = 0; i < dictionary.Length; i++)
+            int[,] dictionary = new int[fileRead.Length / 2, 2];
+            for (int i = 0; i < fileRead.Length / 2; i++)
             {
-                result += ParseDictionary(dictionary, i);
+                int value = fileRead.ReadByte();
+                int character = fileRead.ReadByte();
+                dictionary[i, 0] = value;
+                dictionary[i, 1] = character;
             }
-            return result;
+            fileRead.Close();
+            
+            for (int i = 0; i < dictionary.GetLength(0); i++)
+            {
+                File.AppendAllText(uncompressedPath, ParseDictionary(dictionary, i));
+            }
         }
 
-        static private string ParseDictionary(string[] dictionary, int index)
+        static private string ParseDictionary(int[,] dictionary, int index)
         {
-            var parameters = dictionary[index].Split('\t');
-            int parentIndex = int.Parse(parameters[0]);
-            return parentIndex == -1 ? parameters[1] : $"{ParseDictionary(dictionary, parentIndex)}{parameters[1]}";
+            int parentIndex = dictionary[index, 0];
+            char character = (char)dictionary[index, 1];
+            return parentIndex == 255 ? character.ToString() : ParseDictionary(dictionary, parentIndex) + character;
         }
     }
 }

@@ -1,32 +1,32 @@
-﻿namespace Task2._2
+﻿using System;
+
+namespace Task2._2
 {
     class ArrayStack: IStack
     {
-        private double[] array;
-        private int maxLength;
-        private int length;
+        private double[] values;
+        private int currentLength;
 
         public ArrayStack()
         {
-            this.maxLength = 10;
-            this.length = 0;
-            this.array = new double[this.maxLength];
+            this.currentLength = 0;
+            this.values = new double[10];
         }
 
         public void Push(double value)
         {
-            if (length >= maxLength)
+            if (currentLength >= values.Length)
             {
                 Extend();
             }
-            array[length++] = value;
+            values[currentLength++] = value;
         }
 
         public bool TryPop(out double value)
         {
-            if (length > 0)
+            if (currentLength > 0)
             {
-                value = array[--length];
+                value = values[--currentLength];
                 return true;
             }
             value = -1;
@@ -35,13 +35,7 @@
 
         private void Extend()
         {
-            maxLength *= 2;
-            var newArray = new double[maxLength];
-            for (int i = 0; i < array.Length; i++)
-            {
-                newArray[i] = array[i];
-            }
-            array = newArray;
+            Array.Resize(ref values, values.Length * 2);
         }
     }
 }

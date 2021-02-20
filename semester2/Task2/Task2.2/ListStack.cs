@@ -5,7 +5,7 @@
         private StackElement head;
 
         public void Push(double value)
-            => head = head == null ? new StackElement(value, null) : new StackElement(value, head);
+            => head = new StackElement(value, head);
 
         public bool TryPop(out double value)
         {

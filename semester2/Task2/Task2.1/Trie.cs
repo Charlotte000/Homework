@@ -13,26 +13,27 @@ namespace Task2._1
         public Trie()
         {
             childrenLen = 0;
-            children = new Trie[10];
-            characters = new char[10];
+            children = new Trie[300];
+            characters = new char[300];
         }
 
         public Trie AddChild(char charChild)
         {
-            if (childrenLen < children.Length)
+            if (childrenLen + 1 >= children.Length)
             {
                 Extend();
             }
             children[childrenLen] = new Trie();
             children[childrenLen].parent = this;
-            characters[childrenLen++] = charChild;
-            return children[childrenLen - 1];
+            characters[childrenLen] = charChild;
+            return children[childrenLen++];
         }
 
         private void Extend()
         {
-            Array.Resize(ref children, children.Length * 2);
-            Array.Resize(ref characters, characters.Length * 2);
+            int length = children.Length * 2;
+            Array.Resize(ref children, length);
+            Array.Resize(ref characters, length);
         }
     }
 }

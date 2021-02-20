@@ -65,9 +65,14 @@ namespace Task2._1
 
         static private string ParseDictionary(int[,] dictionary, int index)
         {
+            string result = ((char)dictionary[index, 1]).ToString();
             int parentIndex = dictionary[index, 0];
-            char character = (char)dictionary[index, 1];
-            return parentIndex == 255 ? character.ToString() : ParseDictionary(dictionary, parentIndex) + character;
+            while (parentIndex != 255)
+            {
+                result = (char)dictionary[parentIndex, 1] + result;
+                parentIndex = dictionary[parentIndex, 0];
+            }
+            return result;
         }
     }
 }

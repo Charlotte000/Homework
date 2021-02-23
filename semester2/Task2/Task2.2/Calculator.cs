@@ -4,8 +4,9 @@ namespace Task2._2
 {
     class Calculator
     {
-        static public (string, double) Calculate(string[] commands, IStack stack)
+        static public (string, double) Calculate(string expression, IStack stack)
         {
+            string[] commands = expression.Split(' ', StringSplitOptions.RemoveEmptyEntries);
             foreach (var command in commands)
             {
                 if (int.TryParse(command, out int valueIn))

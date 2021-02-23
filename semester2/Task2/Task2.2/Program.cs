@@ -13,9 +13,8 @@ namespace Task2._2
             }
 
             Console.Write("Input expression: ");
-            string[] commands = Console.ReadLine().Split(' ', StringSplitOptions.RemoveEmptyEntries);
-
-            (string status, double value) = Calculator.Calculate(commands, new ArrayStack());
+            string expression = Console.ReadLine();
+            (string status, double value) = Calculator.Calculate(expression, new ArrayStack());
             if (status == "ok")
             {
                 Console.WriteLine($"Result: {value}");
@@ -29,19 +28,17 @@ namespace Task2._2
         static bool Test()
         {
             var isPassed = true;
-            string status;
-            double result;
 
-            (status, result) = Calculator.Calculate(new string[] {"1", "2", "+" }, new ArrayStack());
+            (string status, double result) = Calculator.Calculate("1 2 +", new ArrayStack());
             isPassed = isPassed && status == "ok" && result == 3;
 
-            (status, _) = Calculator.Calculate(new string[] { "5", "1", "1", "-", "/" }, new ListStack());
+            (status, _) = Calculator.Calculate("5 1 1 - /", new ListStack());
             isPassed = isPassed && status == "Error! Division by zero";
 
-            (status, _) = Calculator.Calculate(new string[] { "5", "1", "999999", "/", "/" }, new ArrayStack());
+            (status, _) = Calculator.Calculate("5 1 999999 / /", new ArrayStack());
             isPassed = isPassed && status == "Error! Division by zero";
 
-            (status, _) = Calculator.Calculate(new string[] { "5", "1", "1", "-" }, new ListStack());
+            (status, _) = Calculator.Calculate("5 1 1 -", new ListStack());
             isPassed = isPassed && status == "Wrong Expression";
 
             return isPassed;

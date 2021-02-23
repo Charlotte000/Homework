@@ -1,78 +1,97 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
+using System.Text;
 
 namespace Task2._1
 {
-    class LZWalgoritm
+    class LzwAlgoritm
     {
         static public void Compress(string path)
         {
             string input = File.ReadAllText(path);
-            string compressedPath = Path.ChangeExtension(path, "zipped");
-            FileStream file = File.OpenWrite(compressedPath);
-            Trie head = new Trie();
-            Trie cursor = head;
-            int index = 0;
-            for (int charIndex = 0; charIndex < input.Length; charIndex++)
+            string compressedPath = path + ".zipped";
+
+            if (File.Exists(compressedPath))
             {
-                bool isExists = false;
-                for (int childIndex = 0; childIndex < cursor.childrenLen; childIndex++)
+                File.Delete(compressedPath);
+            }
+
+            using FileStream file = File.OpenWrite(compressedPath);
+            {
+                var head = new Trie();
+                Trie cursor = head;
+                int index = 0;
+                for (int charIndex = 0; charIndex < input.Length; charIndex++)
                 {
-                    if (cursor.characters[childIndex] == input[charIndex])
+                    if (charIndex == input.Length - 1)
                     {
-                        cursor = cursor.children[childIndex];
-                        isExists = true;
-                        break;
-                    }
-                }
-                if (!isExists || charIndex == input.Length - 1)
-                {
-                    cursor.AddChild(input[charIndex]).value = index++;
-                    if (cursor.parent != null && charIndex != input.Length - 1)
-                    {
-                        file.WriteByte((byte)cursor.value);
+                        WriteTrie(cursor, input[charIndex], file);
                     }
                     else
                     {
-                        file.WriteByte(255);
+                        if (cursor.HasChild(input[charIndex]))
+                        {
+                            cursor = cursor.GetChild(input[charIndex]);
+                        }
+                        else
+                        {
+                            cursor.AddChild(input[charIndex]).value = index;
+                            index++;
+                            WriteTrie(cursor, input[charIndex], file);
+                            cursor = head;
+                        }
                     }
-                    file.WriteByte((byte)input[charIndex]);
-                    cursor = head;
                 }
             }
-            file.Close();
         }
 
         static public void Decompress(string path)
         {
-            FileStream fileRead = File.OpenRead(path);
-            string uncompressedPath = Path.ChangeExtension(path, "txt");
+            string[] dictionary;
 
-            int[,] dictionary = new int[fileRead.Length / 2, 2];
-            for (int i = 0; i < fileRead.Length / 2; i++)
+            string uncompressedPath = path.Remove(path.Length - 7);
+            if (File.Exists(uncompressedPath))
             {
-                int value = fileRead.ReadByte();
-                int character = fileRead.ReadByte();
-                dictionary[i, 0] = value;
-                dictionary[i, 1] = character;
+                File.Delete(uncompressedPath);
             }
-            fileRead.Close();
-            
-            for (int i = 0; i < dictionary.GetLength(0); i++)
+            using FileStream fileRead = File.OpenRead(path);
             {
-                File.AppendAllText(uncompressedPath, ParseDictionary(dictionary, i));
+                using FileStream fileWrite = File.OpenWrite(uncompressedPath);
+                {
+                    dictionary = new string[fileRead.Length / 5];
+                    byte[] valueBytes = new byte[4];
+                    for (int i = 0; i < fileRead.Length / 5; i++)
+                    {
+                        valueBytes[0] = (byte)fileRead.ReadByte();
+                        valueBytes[1] = (byte)fileRead.ReadByte();
+                        valueBytes[2] = (byte)fileRead.ReadByte();
+                        valueBytes[3] = (byte)fileRead.ReadByte();
+                        int value = BitConverter.ToInt32(valueBytes);
+                        int character = fileRead.ReadByte();
+
+                        if (value == -1)
+                        {
+                            dictionary[i] = ((char)character).ToString();
+                        }
+                        else
+                        {
+                            dictionary[i] = dictionary[value] + ((char)character).ToString();
+                        }
+                        fileWrite.Write(Encoding.Unicode.GetBytes(dictionary[i]));
+                    }
+                }
             }
         }
 
-        static private string ParseDictionary(int[,] dictionary, int index)
+        static private void WriteTrie(Trie cursor, char character, FileStream file)
         {
-            string result = ((char)dictionary[index, 1]).ToString();
-            int parentIndex = dictionary[index, 0];
-            while (parentIndex != 255)
+            int writeValue = cursor.HasParent() ? cursor.value : -1;
+            byte[] bytes = BitConverter.GetBytes(writeValue);
+            foreach (var b in bytes)
             {
-                result = (char)dictionary[parentIndex, 1] + result;
-                parentIndex = dictionary[parentIndex, 0];
+                file.WriteByte(b);
             }
-            return result;
+            file.WriteByte((byte)character);
         }
     }
 }

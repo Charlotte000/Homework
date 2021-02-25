@@ -6,6 +6,7 @@ namespace Task2._1
     class Trie
     {
         public int value;
+        public static int counter = 1;
         private Trie parent;
         private Hashtable children;
 
@@ -18,6 +19,8 @@ namespace Task2._1
         {
             Trie newChild = new Trie();
             newChild.parent = this;
+            newChild.value = counter;
+            counter++;
             children.Add(keyByte, newChild);
             return newChild;
         }

@@ -20,7 +20,6 @@ namespace Task2._1
                 {
                     var head = new Trie();
                     Trie cursor = head;
-                    int index = 1;
                     for (int charIndex = 0; charIndex < fileRead.Length; charIndex++)
                     {
                         byte valueByte = (byte)fileRead.ReadByte();
@@ -36,14 +35,13 @@ namespace Task2._1
                             }
                             else
                             {
-                                cursor.AddChild(valueByte).value = index;
-                                index++;
+                                cursor.AddChild(valueByte);
                                 WriteTrie(cursor, valueByte, fileWrite);
                                 cursor = head;
                             }
                         }
                     }
-                    fileWrite.Write(BitConverter.GetBytes(index));
+                    fileWrite.Write(BitConverter.GetBytes(Trie.counter));
                 }
             }
         }

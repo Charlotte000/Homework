@@ -12,7 +12,7 @@ namespace Task2._1
                 if (args[0] == "-c")
                 {
                     string path = args[1];
-                    LzwAlgoritm.Compress(path);
+                    LzwAlgorithm.Compress(path);
                     var origin = new FileInfo(path);
                     int originLength = (int)origin.Length;
                     FileInfo compressed = new FileInfo(path + ".zipped");
@@ -22,7 +22,7 @@ namespace Task2._1
                 else if (args[0] == "-u")
                 {
                     string path = args[1];
-                    LzwAlgoritm.Decompress(path);
+                    LzwAlgorithm.Decompress(path);
                 }
             }
             else

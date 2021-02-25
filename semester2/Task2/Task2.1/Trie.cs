@@ -14,22 +14,22 @@ namespace Task2._1
             children = new Hashtable();
         }
 
-        public Trie AddChild(char charChild)
+        public Trie AddChild(byte keyByte)
         {
             Trie newChild = new Trie();
             newChild.parent = this;
-            children.Add(charChild, newChild);
+            children.Add(keyByte, newChild);
             return newChild;
         }
 
-        public bool HasChild(char charChild)
+        public bool HasChild(byte keyByte)
         {
-            return children.ContainsKey(charChild);
+            return children.ContainsKey(keyByte);
         }
 
-        public Trie GetChild(char charChild)
+        public Trie GetChild(byte keyByte)
         {
-            return (Trie)children[charChild];
+            return (Trie)children[keyByte];
         }
 
         public bool HasParent()

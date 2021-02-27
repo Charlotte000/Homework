@@ -4,6 +4,9 @@ using System.Collections;
 
 namespace Task2._1
 {
+    /// <summary>
+    /// Prefix tree realization
+    /// </summary>
     class Trie
     {
         private int counter;
@@ -17,6 +20,10 @@ namespace Task2._1
             cursor = head;
         }
 
+        /// <summary>
+        /// Adds a value to the tree
+        /// </summary>
+        /// <returns>True - if new node is created, otherwise - false</returns>
         public bool TryAdd(byte value)
         {
             if (cursor.HasChild(value))
@@ -29,6 +36,9 @@ namespace Task2._1
             return true;
         }
 
+        /// <summary>
+        /// Saves node in file
+        /// </summary>
         public void SaveTrieElement(byte value, FileStream file)
         {
             int writeValue = cursor.HasParent() ? cursor.Value : 0;
@@ -38,9 +48,15 @@ namespace Task2._1
             file.WriteByte(value);
         }
 
+        /// <summary>
+        /// Saves node count
+        /// </summary>
         public void SaveTrieCount(FileStream file)
             => file.Write(BitConverter.GetBytes(counter));
 
+        /// <summary>
+        /// Sets the cursor back to the head
+        /// </summary>
         public void ResetCursor()
             => cursor = head;
 

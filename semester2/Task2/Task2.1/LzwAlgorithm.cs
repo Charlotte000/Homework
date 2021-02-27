@@ -5,6 +5,10 @@ namespace Task2._1
 {
     class LzwAlgorithm
     {
+        /// <summary>
+        /// Сompresses file, creating .zipped file
+        /// </summary>
+        /// <param name="path">Path to file</param>
         static public void Compress(string path)
         {
             string compressedPath = path + ".zipped";
@@ -36,6 +40,10 @@ namespace Task2._1
             trie.SaveTrieCount(fileWrite);      
         }
 
+        /// <summary>
+        /// Uncompresses .zipped file
+        /// </summary>
+        /// <param name="path">Path to .zipped file</param>
         static public void Decompress(string path)
         {
             string uncompressedPath = path.Remove(path.Length - 7);

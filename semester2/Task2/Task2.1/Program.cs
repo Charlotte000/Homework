@@ -15,7 +15,7 @@ namespace Task2._1
                     LzwAlgorithm.Compress(path);
                     var origin = new FileInfo(path);
                     int originLength = (int)origin.Length;
-                    FileInfo compressed = new FileInfo(path + ".zipped");
+                    var compressed = new FileInfo(path + ".zipped");
                     int compressedLength = (int)compressed.Length;
                     Console.WriteLine($"Compression ratio: {Math.Round((float) originLength / compressedLength, 3)}");
                 }

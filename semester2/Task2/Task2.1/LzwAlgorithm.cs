@@ -20,7 +20,7 @@ namespace Task2._1
 
             using FileStream fileRead = File.OpenRead(path);
             using FileStream fileWrite = File.OpenWrite(compressedPath);
-            Trie trie = new Trie();
+            var trie = new Trie();
             for (int charIndex = 0; charIndex < fileRead.Length; charIndex++)
             {
                 byte valueByte = (byte)fileRead.ReadByte();
@@ -54,7 +54,7 @@ namespace Task2._1
             using FileStream fileRead = File.OpenRead(path);
             using FileStream fileWrite = File.OpenWrite(uncompressedPath);
             fileRead.Seek(-4, SeekOrigin.End);
-            byte[] sizeByte = new byte[4];
+            var sizeByte = new byte[4];
             sizeByte[0] = (byte)fileRead.ReadByte();
             sizeByte[1] = (byte)fileRead.ReadByte();
             sizeByte[2] = (byte)fileRead.ReadByte();

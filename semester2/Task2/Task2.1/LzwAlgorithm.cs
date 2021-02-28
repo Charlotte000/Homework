@@ -12,12 +12,6 @@ namespace Task2._1
         static public void Compress(string path)
         {
             string compressedPath = path + ".zipped";
-
-            if (File.Exists(compressedPath))
-            {
-                File.Delete(compressedPath);
-            }
-
             using FileStream fileRead = File.OpenRead(path);
             using FileStream fileWrite = File.OpenWrite(compressedPath);
             var trie = new Trie();
@@ -47,10 +41,6 @@ namespace Task2._1
         static public void Decompress(string path)
         {
             string uncompressedPath = path.Remove(path.Length - 7);
-            if (File.Exists(uncompressedPath))
-            {
-                File.Delete(uncompressedPath);
-            }
             using FileStream fileRead = File.OpenRead(path);
             using FileStream fileWrite = File.OpenWrite(uncompressedPath);
             fileRead.Seek(-4, SeekOrigin.End);

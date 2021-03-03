@@ -14,7 +14,7 @@ namespace Task2._1
                     string path = args[1];
                     if (File.Exists(path + ".zipped"))
                     {
-                        Console.WriteLine("File is already exists");
+                        Console.WriteLine("File already exists");
                         return;
                     }
                     LzwAlgorithm.Compress(path);
@@ -29,7 +29,7 @@ namespace Task2._1
                     string path = args[1];
                     if (File.Exists(path.Remove(path.Length - 7)))
                     {
-                        Console.WriteLine("File is already exists");
+                        Console.WriteLine("File already exists");
                         return;
                     }
                     LzwAlgorithm.Decompress(path);

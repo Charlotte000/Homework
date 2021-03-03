@@ -1,11 +1,11 @@
 ﻿using System;
 using System.IO;
-using System.Collections;
+using System.Collections.Generic;
 
 namespace Task2._1
 {
     /// <summary>
-    /// Prefix tree realization
+    /// Prefix tree implementation
     /// </summary>
     class Trie
     {
@@ -64,10 +64,10 @@ namespace Task2._1
         {
             public int Value { get; set; }
             private TrieElement parent;
-            private Hashtable children;
+            private Dictionary<byte, TrieElement> children;
 
             public TrieElement()
-                => children = new Hashtable();
+                => children = new Dictionary<byte, TrieElement>();
 
             public void AddChild(int value, byte keyByte)
             {
@@ -81,7 +81,7 @@ namespace Task2._1
                 => children.ContainsKey(keyByte);
 
             public TrieElement GetChild(byte keyByte)
-                => (TrieElement)children[keyByte];
+                => children[keyByte];
 
             public bool HasParent()
                 => parent != null;

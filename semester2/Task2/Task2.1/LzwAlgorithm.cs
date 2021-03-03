@@ -3,7 +3,10 @@ using System.IO;
 
 namespace Task2._1
 {
-    class LzwAlgorithm
+    /// <summary>
+    /// Compress & decompress files using Lempel-Ziv-Welch algorithm
+    /// </summary>
+    static class LzwAlgorithm
     {
         /// <summary>
         /// Сompresses file, creating .zipped file

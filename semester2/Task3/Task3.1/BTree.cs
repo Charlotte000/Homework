@@ -5,7 +5,7 @@ namespace Task3._1
     /// <summary>
     /// B-tree data structure implementation  
     /// </summary>
-    class BTree
+    public class BTree
     {
         private readonly int t;
         private BNode head;

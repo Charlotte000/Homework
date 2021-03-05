@@ -1,3 +1,4 @@
+using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Task3._1.Tests
@@ -73,7 +74,7 @@ namespace Task3._1.Tests
             Assert.AreEqual(13, tree.FindValue(7));
             Assert.AreEqual(15, tree.FindValue(23));
             Assert.AreEqual(1, tree.FindValue(1));
-            Assert.AreEqual(-1, tree.FindValue(0));
+            Assert.ThrowsException<ArgumentOutOfRangeException>(() => tree.FindValue(0));
         }
 
         [TestMethod]
@@ -102,6 +103,21 @@ namespace Task3._1.Tests
             tree.AddValue(6, 7);
             tree.AddValue(7, 8);
             tree.PrintTree();
+        }
+
+        [TestMethod]
+        public void DeleteValueTest()
+        {
+            tree.AddValue(1, 2);
+            tree.AddValue(2, 3);
+            tree.AddValue(3, 4);
+            tree.AddValue(4, 5);
+            tree.AddValue(5, 6);
+            tree.AddValue(6, 7);
+            tree.AddValue(7, 8);
+            tree.DeleteValue(4);
+            Assert.ThrowsException<ArgumentOutOfRangeException>(() => tree.DeleteValue(456));
+            Assert.ThrowsException<ArgumentOutOfRangeException>(() => tree.FindValue(4));
         }
     }
 }

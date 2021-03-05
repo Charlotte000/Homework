@@ -10,7 +10,6 @@ namespace Task3._1
         private readonly int t;
         private BNode head;
 
-        /// <param name="t">Degree</param>
         public BTree(int t)
         {
             this.t = t;
@@ -29,7 +28,7 @@ namespace Task3._1
         /// <summary>
         /// Get's value by its key
         /// </summary>
-        /// <returns>Value</returns>
+        /// <exception cref="ArgumentOutOfRangeException">Throws if value not found</exception>
         public int FindValue(int key)
         {
             return head.FindValue(key);
@@ -53,7 +52,8 @@ namespace Task3._1
 
         /// <summary>
         /// Deletes values by the key
-        /// </summary>=
+        /// </summary>
+        /// <exception cref="ArgumentOutOfRangeException">Throws if value not found</exception>
         public void DeleteValue(int key)
         {
             head.DeleteValue(key);
@@ -162,8 +162,7 @@ namespace Task3._1
             /// <summary>
             /// Recursively finds value 
             /// </summary>
-            /// <param name="key"></param>
-            /// <returns></returns>
+            /// <exception cref="ArgumentOutOfRangeException">Throws if value not found</exception>
             public int FindValue(int key)
             {
                 if (isLeaf)
@@ -175,7 +174,7 @@ namespace Task3._1
                             return values[i].Value;
                         }
                     }
-                    return -1;
+                    throw new ArgumentOutOfRangeException("Value not found");
                 }
                 for (int i = 0; i < realLen; i++)
                 {
@@ -192,7 +191,7 @@ namespace Task3._1
                 {
                     return children[realLen].FindValue(key);
                 }
-                return -1;
+                throw new ArgumentOutOfRangeException("Value not found");
             }
 
             /// <summary>
@@ -258,13 +257,14 @@ namespace Task3._1
                                 children[i].values[children[i].realLen - 1].Value = valueTmp;
                                 children[i].DeleteValue(key);
                             }
-                            else if (children[i + 1].realLen > 1)
-                            {
-
-                            }
                         }
                         return;
                     }
+                }
+                
+                if (isLeaf)
+                {
+                    throw new ArgumentOutOfRangeException("Value not found");
                 }
 
                 if (key < values[0].Key)

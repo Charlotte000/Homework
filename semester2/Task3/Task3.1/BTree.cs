@@ -52,6 +52,14 @@ namespace Task3._1
         }
 
         /// <summary>
+        /// Deletes values by the key
+        /// </summary>=
+        public void DeleteValue(int key)
+        {
+            head.DeleteValue(key);
+        }
+
+        /// <summary>
         /// Node in the tree
         /// </summary>
         private class BNode
@@ -219,6 +227,64 @@ namespace Task3._1
                     return children[realLen].IsExists(key);
                 }
                 return false;
+            }
+
+            /// <summary>
+            /// Recursively deletes value by the key
+            /// </summary>
+            public void DeleteValue(int key)
+            {
+                for (int i = 0; i < realLen; i++)
+                {
+                    if (values[i].Key == key)
+                    {
+                        if (isLeaf)
+                        {
+                            for (int j = i; j < realLen - 1; j++)
+                            {
+                                values[j] = values[j + 1];
+                            }
+                            realLen--;
+                        }
+                        else
+                        {
+                            if (children[i].realLen >= 1)
+                            {
+                                int keyTmp = values[i].Key;
+                                int valueTmp = values[i].Value;
+                                values[i].Key = children[i].values[children[i].realLen - 1].Key;
+                                values[i].Value = children[i].values[children[i].realLen - 1].Value;
+                                children[i].values[children[i].realLen - 1].Key = keyTmp;
+                                children[i].values[children[i].realLen - 1].Value = valueTmp;
+                                children[i].DeleteValue(key);
+                            }
+                            else if (children[i + 1].realLen > 1)
+                            {
+
+                            }
+                        }
+                        return;
+                    }
+                }
+
+                if (key < values[0].Key)
+                {
+                    children[0].DeleteValue(key);
+                    return;
+                }
+                if (values[realLen - 1].Key < key)
+                {
+                    children[realLen].DeleteValue(key);
+                    return;
+                }
+                for (int i = 0; i < realLen - 1; i++)
+                {
+                    if (values[i].Key < key && key < values[i + 1].Key)
+                    {
+                        children[i + 1].DeleteValue(key);
+                        return;
+                    }
+                }
             }
 
             /// <summary>

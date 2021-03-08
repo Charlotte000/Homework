@@ -66,7 +66,10 @@ namespace Task4._2
             }
         }
 
-        public bool IsExists(int value)
+        /// <summary>
+        /// Checks object availability in the container
+        /// </summary>
+        public bool Exists(int value)
         {
             if (head is not null && head.Value == value)
             {

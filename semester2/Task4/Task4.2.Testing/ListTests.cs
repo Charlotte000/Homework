@@ -70,12 +70,12 @@ namespace Task4._2.Testing
         [Test]
         public void IsExistsTest()
         {
-            Assert.AreEqual(false, list.IsExists(12));
+            Assert.AreEqual(false, list.Exists(12));
             list.AddValue(5);
-            Assert.AreEqual(true, list.IsExists(5));
+            Assert.AreEqual(true, list.Exists(5));
             list.AddValue(90);
             list.AddValue(123);
-            Assert.AreEqual(true, list.IsExists(123));
+            Assert.AreEqual(true, list.Exists(123));
         }
     }
 }

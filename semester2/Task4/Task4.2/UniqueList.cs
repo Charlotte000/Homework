@@ -10,7 +10,7 @@
             get => GetElement(index).Value;
             set
             {
-                if (IsExists(value))
+                if (Exists(value))
                 {
                     throw new ValueAlreadyExistsException();
                 }
@@ -25,7 +25,7 @@
         /// <exception cref="ValueAlreadyExistsException">Throws if the value is already in the list</exception>
         public override void AddValue(int value)
         {
-            if (IsExists(value))
+            if (Exists(value))
             {
                 throw new ValueAlreadyExistsException();
             }

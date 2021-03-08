@@ -8,10 +8,8 @@ namespace Task4._2
     public class List
     {
         protected ListElement head;
+        protected ListElement tail;
         
-        public List()
-            => head = null;
-
         /// <summary>
         /// Adds value to the list
         /// </summary>
@@ -20,15 +18,12 @@ namespace Task4._2
             if (head is null)
             {
                 head = new ListElement(value);
+                tail = head;
             }
             else
             {
-                ListElement cursor = head;
-                while (cursor.Next != null)
-                {
-                    cursor = cursor.Next;
-                }
-                cursor.Next = new ListElement(value);
+                tail.Next = new ListElement(value);
+                tail = tail.Next;
             }
         }
 
@@ -42,14 +37,14 @@ namespace Task4._2
         /// <summary>
         /// Deletes value by the index
         /// </summary>
-        /// <exception cref="ValueDoesNotExists">Throws if the index is out of boundaries</exception>
+        /// <exception cref="ValueDoesNotExist">Throws if the index is out of boundaries</exception>
         public void DeleteValue(int index)
         {
             if (index == 0)
             {
                 if (head == null)
                 {
-                    throw new ValueDoesNotExists();
+                    throw new ValueDoesNotExist();
                 }
                 head = head.Next;
             }
@@ -60,18 +55,36 @@ namespace Task4._2
                     ListElement cursor = GetElement(index - 1);
                     if (cursor.Next is null)
                     {
-                        throw new ValueDoesNotExists();
+                        throw new ValueDoesNotExist();
                     }
                     cursor.Next = cursor.Next.Next;
                 }
                 catch (IndexOutOfRangeException)
                 {
-                    throw new ValueDoesNotExists();
+                    throw new ValueDoesNotExist();
                 }
             }
         }
 
-        public int this[int index]
+        public bool IsExists(int value)
+        {
+            if (head is not null && head.Value == value)
+            {
+                return true;
+            }
+            ListElement cursor = head;
+            while (cursor?.Next is not null)
+            {
+                cursor = cursor.Next;
+                if (cursor.Value == value)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public virtual int this[int index]
         {
             get => GetElement(index).Value;
             set => GetElement(index).Value = value;
@@ -81,7 +94,7 @@ namespace Task4._2
         /// Returns value by its index
         /// </summary>
         /// <exception cref="IndexOutOfRangeException">Throws if index is out of lists length</exception>
-        private ListElement GetElement(int index)
+        protected ListElement GetElement(int index)
         {
             if (head == null)
             {

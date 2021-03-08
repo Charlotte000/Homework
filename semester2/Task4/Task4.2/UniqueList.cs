@@ -5,6 +5,19 @@
     /// </summary>
     public class UniqueList: List
     {
+        public override int this[int index]
+        {
+            get => GetElement(index).Value;
+            set
+            {
+                if (IsExists(value))
+                {
+                    throw new ValueAlreadyExistsException();
+                }
+                GetElement(index).Value = value;
+            }
+        }
+
 
         /// <summary>
         /// Adds unique value to the list
@@ -12,27 +25,12 @@
         /// <exception cref="ValueAlreadyExistsException">Throws if the value is already in the list</exception>
         public override void AddValue(int value)
         {
-            if (head is null)
+            if (IsExists(value))
             {
-                head = new ListElement(value);
+                throw new ValueAlreadyExistsException();
             }
-            else
-            {
-                if (head.Value == value)
-                {
-                    throw new ValueAlreadyExistsException();
-                }
-                ListElement cursor = head;
-                while (cursor.Next is not null)
-                {
-                    cursor = cursor.Next; 
-                    if (cursor.Value == value)
-                    {
-                        throw new ValueAlreadyExistsException();
-                    }
-                }
-                cursor.Next = new ListElement(value);
-            }
+            base.AddValue(value);
         }
+
     }
 }

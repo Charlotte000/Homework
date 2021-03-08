@@ -57,14 +57,25 @@ namespace Task4._2.Testing
         [Test]
         public void DeleteNonExistentValueTest()
         {
-            Assert.Throws<ValueDoesNotExists>(() => list.DeleteValue(0));
-            Assert.Throws<ValueDoesNotExists>(() => list.DeleteValue(10));
+            Assert.Throws<ValueDoesNotExist>(() => list.DeleteValue(0));
+            Assert.Throws<ValueDoesNotExist>(() => list.DeleteValue(10));
             for (int i = 0; i < 10; i++)
             {
                 list.AddValue(10 - i);
             }
-            Assert.Throws<ValueDoesNotExists>(() => list.DeleteValue(10));
-            Assert.Throws<ValueDoesNotExists>(() => list.DeleteValue(20));
+            Assert.Throws<ValueDoesNotExist>(() => list.DeleteValue(10));
+            Assert.Throws<ValueDoesNotExist>(() => list.DeleteValue(20));
+        }
+
+        [Test]
+        public void IsExistsTest()
+        {
+            Assert.AreEqual(false, list.IsExists(12));
+            list.AddValue(5);
+            Assert.AreEqual(true, list.IsExists(5));
+            list.AddValue(90);
+            list.AddValue(123);
+            Assert.AreEqual(true, list.IsExists(123));
         }
     }
 }

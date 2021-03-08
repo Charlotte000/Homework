@@ -3,6 +3,9 @@ using System.Runtime.Serialization;
 
 namespace Task4._2
 {
+    /// <summary>
+    /// Exception throws if value exists in the container
+    /// </summary>
     [Serializable]
     public class ValueAlreadyExistsException: Exception
     {

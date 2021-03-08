@@ -36,6 +36,9 @@ namespace Task4._2.Testing
             {
                 Assert.Throws<ValueAlreadyExistsException>(() => list.AddValue(i));
             }
+
+            Assert.Throws<ValueAlreadyExistsException>(() => list[0] = 0);
+            list[0] = 123;
         }
     }
 }

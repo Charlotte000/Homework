@@ -11,6 +11,9 @@ namespace Task4._1.Tests
             var tree = new Tree("(+ 1 (* 9 2))");
             Assert.AreEqual(19, tree.Calculate());
 
+            tree = new Tree("(+ (* 1 2) (- 3 4)");
+            Assert.AreEqual(1, tree.Calculate());
+
             tree = new Tree("(- 0 (/ 1 3)");
             Assert.Less(Math.Abs(tree.Calculate() + .3333), .001);
         }

@@ -2,166 +2,73 @@
 
 namespace Task4._1
 {
-    enum OPERATOR
-    {
-        ADD,
-        SUB,
-        MULT,
-        DIV
-    }
-
+    /// <summary>
+    /// Expression tree implementation
+    /// </summary>
     public class Tree
     {
-        private Node head;
+        private Operator head;
 
         public Tree(string expression)
         {
-            head = Read(expression, 0, out _);
+            string[] commands = expression.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+            int index = 0;
+            head = Read(commands, 0, ref index) as Operator;
         }
 
-        private Node Read(string expression, int index, out int indexOut)
-        {
-            char operand = expression[index + 1];
-            int leftIndex = index + 3;
-            int rightIndex = index + 5;
-            indexOut = index + 8;
-            Node left;
-            Node right;
-
-            // Left
-            if (expression[leftIndex] == '(')
-            {
-                left = Read(expression, leftIndex, out rightIndex);
-            }
-            else
-            {
-                left = new(' ');
-                left.Result = int.Parse(expression[leftIndex].ToString());
-            }
-
-            // Right
-            if (expression[rightIndex] == '(')
-            {
-                right = Read(expression, rightIndex, out indexOut);
-            }
-            else
-            {
-                right = new(' ');
-                right.Result = int.Parse(expression[rightIndex].ToString());
-            }
-            var result = new Node(operand);
-            result.Left = left;
-            result.Right = right;
-            return result;
-        }
-
+        /// <summary>
+        /// Draws tree structure in the console
+        /// </summary>
         public void DrawTree()
-        {
-            head.Draw(0);
-        }
+            => head.Draw(0);
 
+        /// <summary>
+        /// Recursively calculates expression value
+        /// </summary>
         public double Calculate()
+            => head.Calculate();
+
+        private ITreeNode Read(string[] commands, int indexIn, ref int indexOut)
         {
-            head.Calculate();
-            return head.Result;
-        }
+            char op = commands[indexIn][1];
 
-        private class Node
-        {
-            private readonly OPERATOR op;
+            ITreeNode left;
+            ITreeNode right;
+            indexOut = indexIn + 2;
 
-            public Node(char operand)
+            if (commands[indexIn + 1][0] != '(')
             {
-                switch (operand)
-                {
-                    case '+':
-                        {
-                            op = OPERATOR.ADD;
-                            break;
-                        }
-                    case '-':
-                        {
-                            op = OPERATOR.SUB;
-                            break;
-                        }
-                    case '*':
-                        {
-                            op = OPERATOR.MULT;
-                            break;
-                        }
-                    case '/':
-                        {
-                            op = OPERATOR.DIV;
-                            break;
-                        }
-
-                }
+                left = new Operand(int.Parse(commands[indexIn + 1]));
+            }
+            else
+            {
+                left = Read(commands, indexIn + 1, ref indexOut);
             }
 
-            public double Result { get; set; }
-            public Node Left { get; set; }
-            public Node Right { get; set; }
-
-            public void Calculate()
+            if (commands[indexOut][0] != '(')
             {
-                if (Left is null || Right is null)
+                string rValue = commands[indexOut].Remove(commands[indexOut].Length - 1, 1);
+                while (rValue.Length > 0)
                 {
-                    return;
-                }
-                Left.Calculate();
-                Right.Calculate();
-                switch (op)
-                {
-                    case OPERATOR.ADD:
+                    if (rValue[rValue.Length - 1] == ')')
                     {
-                        Result = Left.Result + Right.Result;
-                        break;
+                        rValue = rValue.Remove(rValue.Length - 1, 1);
                     }
-                    case OPERATOR.SUB:
+                    else
                     {
-                        Result = Left.Result - Right.Result;
-                        break;
-                    }
-                    case OPERATOR.MULT:
-                    {
-                        Result = Left.Result * Right.Result;
-                        break;
-                    }
-                    case OPERATOR.DIV:
-                    {
-                        if (Math.Abs(Right.Result) < .0001)
-                        {
-                            throw new DivideByZeroException();
-                        }
-                        Result = Left.Result / Right.Result;
                         break;
                     }
                 }
+                right = new Operand(int.Parse(rValue));
+                indexOut++;
+            }
+            else
+            {
+                right = Read(commands, indexOut, ref indexOut);
             }
 
-            public void Draw(int offset)
-            {
-                if (Left is not null)
-                {
-                    Left.Draw(offset + 1);
-                }
-                for (int i = 0; i < offset; i++)
-                {
-                    Console.Write('\t');
-                }
-                if (Left is not null)
-                {
-                    Console.WriteLine(op);
-                }
-                else
-                {
-                    Console.WriteLine(Result);
-                }
-                if (Right is not null)
-                {
-                    Right.Draw(offset + 1);
-                }
-            }
+            ITreeNode head = new Operator(op, left, right);
+            return head;
         }
     }
 }

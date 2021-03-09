@@ -10,6 +10,7 @@ namespace Task3._1
         private readonly int t;
         private BNode head;
 
+        /// <param name="t">Degree of the tree</param>
         public BTree(int t)
         {
             this.t = t;
@@ -20,44 +21,34 @@ namespace Task3._1
         /// Adds value into the tree if isn't existed;
         /// Otherwise changes it's value
         /// </summary>
-        public void AddValue(int key, int value)
-        {
-            head.InsertValue(key, value, t);
-        }
+        public void AddValue(string key, string value)
+           => head.InsertValue(key, value, t);
 
         /// <summary>
         /// Get's value by its key
         /// </summary>
         /// <exception cref="ArgumentOutOfRangeException">Throws if value not found</exception>
-        public int FindValue(int key)
-        {
-            return head.FindValue(key);
-        }
+        public string FindValue(string key)
+            => head.FindValue(key);
 
         /// <summary>
         /// Checks object availability
         /// </summary>
-        public bool IsExists(int key)
-        {
-            return head.IsExists(key);
-        }
+        public bool Exists(string key)
+            => head.Exists(key);
 
         /// <summary>
         /// Recursively draws entire tree
         /// </summary>
         public void PrintTree()
-        {
-            head.PrintValues();
-        }
+            => head.PrintValues();
 
         /// <summary>
         /// Deletes values by the key
         /// </summary>
         /// <exception cref="ArgumentOutOfRangeException">Throws if value not found</exception>
-        public void DeleteValue(int key)
-        {
-            head.DeleteValue(key);
-        }
+        public void DeleteValue(string key)
+            => head.DeleteValue(key);
 
         /// <summary>
         /// Node in the tree
@@ -85,7 +76,10 @@ namespace Task3._1
             /// <param name="margin">Offset</param>
             public void PrintValues(int margin = 0)
             {
-                for (int j = 0; j < margin; j++) Console.Write(' ');
+                for (int j = 0; j < margin; j++)
+                {
+                    Console.Write(' ');
+                }
                 for (int i = 0; i < realLen; i++)
                 {
                     Console.Write($"{values[i].Key}({values[i].Value}) ");
@@ -94,64 +88,58 @@ namespace Task3._1
 
                 for (int i = 0; i <= realLen; i++)
                 {
-                    if (children[i] != null) children[i].PrintValues(margin + 2);
+                    if (children[i] != null)
+                    {
+                        children[i].PrintValues(margin + 2);
+                    }
                 }
             }
 
             /// <summary>
-            /// Recursively adds values into itself or it's children
+            /// Recursively adds values into itself or its children
             /// </summary>
             /// <param name="degree">Tree's degree</param>
-            public void InsertValue(int key, int value, int degree)
+            public void InsertValue(string key, string value, int degree)
             {
                 if (isLeaf)
                 {
                     if (realLen == 0)
                     {
-                        values[0] = new Data(key, value);
-                        realLen++;
+                        InsertChild(0, new Data(key, value));
                         return;
                     }
                     for (int i = 0; i < realLen; i++)
                     {
-                        if (values[i].Key == key)
+                        if (key.CompareTo(values[i].Key) == 0)
                         {
                             values[i].Value = value;
                             return;
                         }
-                        if (values[i].Key > key)
+                        if (key.CompareTo(values[i].Key) == -1)
                         {
-                            values[realLen] = new Data(0, 0);
-                            for (int j = realLen - 1; j >= i; j--)
-                            {
-                                values[j + 1].Key = values[j].Key;
-                                values[j + 1].Value = values[j].Value;
-                            }
-                            values[i].Value = value;
-                            realLen++;
+                            InsertChild(i, new Data(key, value));
                             TrySplit(degree);
                             return;
                         }
                     }
-                    values[realLen] = new Data(key, value);
-                    realLen++;
+                    InsertChild(realLen, new Data(key, value));
                     TrySplit(degree);
                     return;
                 }
 
-                if (key < values[0].Key)
+                if (key.CompareTo(values[0].Key) == -1)
                 {
                     children[0].InsertValue(key, value, degree);
                     return;
                 }
-                if (values[realLen - 1].Key < key)
+                if (key.CompareTo(values[realLen - 1].Key) == 1)
                 {
                     children[realLen].InsertValue(key, value, degree);
                     return;
                 }
                 for (int i = 0; i < realLen; i++)
                 {
-                    if (values[i].Key < key && key < values[i + 1].Key)
+                    if (key.CompareTo(values[i].Key) == 1 && key.CompareTo(values[i + 1].Key) == -1)
                     {
                         children[i + 1].InsertValue(key, value, degree);
                         return;
@@ -160,82 +148,38 @@ namespace Task3._1
             }
 
             /// <summary>
-            /// Recursively finds value 
+            /// Returns value with the given key
             /// </summary>
             /// <exception cref="ArgumentOutOfRangeException">Throws if value not found</exception>
-            public int FindValue(int key)
+            public string FindValue(string key)
             {
-                if (isLeaf)
-                {
-                    for (int i = 0; i < realLen; i++)
-                    {
-                        if (values[i].Key == key)
-                        {
-                            return values[i].Value;
-                        }
-                    }
-                    throw new ArgumentOutOfRangeException("Value not found");
-                }
-                for (int i = 0; i < realLen; i++)
-                {
-                    if (values[i].Key == key)
-                    {
-                        return values[i].Value;
-                    }
-                    if (key < values[i].Key)
-                    {
-                        return children[i].FindValue(key);
-                    }
-                }
-                if (values[realLen - 1].Key < key)
-                {
-                    return children[realLen].FindValue(key);
-                }
-                throw new ArgumentOutOfRangeException("Value not found");
+                return GetData(key).Value;
             }
 
             /// <summary>
             /// Checks key-value availability
             /// </summary>
-            public bool IsExists(int key)
+            public bool Exists(string key)
             {
-                if (isLeaf)
+                try
                 {
-                    for (int i = 0; i < realLen; i++)
-                    {
-                        if (values[i].Key == key)
-                        {
-                            return true;
-                        }
-                    }
+                    GetData(key);
+                    return true;
+                }
+                catch (ArgumentOutOfRangeException)
+                {
                     return false;
                 }
-                for (int i = 0; i < realLen; i++)
-                {
-                    if (values[i].Key == key)
-                    {
-                        return true;
-                    }
-                    if (key < values[i].Key)
-                    {
-                        return children[i].IsExists(key);
-                    }
-                }
-                if (values[realLen - 1].Key < key)
-                {
-                    return children[realLen].IsExists(key);
-                }
-                return false;
             }
 
             /// <summary>
             /// Recursively deletes value by the key
             /// </summary>
-            public void DeleteValue(int key)
+            public void DeleteValue(string key)
             {
                 for (int i = 0; i < realLen; i++)
                 {
-                    if (values[i].Key == key)
+                    if (key.CompareTo(values[i].Key) == 0)
                     {
                         if (isLeaf)
                         {
@@ -249,8 +193,8 @@ namespace Task3._1
                         {
                             if (children[i].realLen >= 1)
                             {
-                                int keyTmp = values[i].Key;
-                                int valueTmp = values[i].Value;
+                                string keyTmp = values[i].Key;
+                                string valueTmp = values[i].Value;
                                 values[i].Key = children[i].values[children[i].realLen - 1].Key;
                                 values[i].Value = children[i].values[children[i].realLen - 1].Value;
                                 children[i].values[children[i].realLen - 1].Key = keyTmp;
@@ -267,19 +211,19 @@ namespace Task3._1
                     throw new ArgumentOutOfRangeException("Value not found");
                 }
 
-                if (key < values[0].Key)
+                if (key.CompareTo(values[0].Key) == -1)
                 {
                     children[0].DeleteValue(key);
                     return;
                 }
-                if (values[realLen - 1].Key < key)
+                if (key.CompareTo(values[realLen - 1].Key) == 1)
                 {
                     children[realLen].DeleteValue(key);
                     return;
                 }
                 for (int i = 0; i < realLen - 1; i++)
                 {
-                    if (values[i].Key < key && key < values[i + 1].Key)
+                    if (key.CompareTo(values[i].Key) == 1 && key.CompareTo(values[i + 1].Key) == -1)
                     {
                         children[i + 1].DeleteValue(key);
                         return;
@@ -296,7 +240,7 @@ namespace Task3._1
                 if (realLen == 2 * degree - 1)
                 {
                     isLeaf = false;
-                    BNode left = new BNode(degree, this);
+                    var left = new BNode(degree, this);
                     for (int i = 0; i < degree; i++)
                     {
                         if (i != degree - 1)
@@ -311,7 +255,7 @@ namespace Task3._1
                         left.children[i] = children[i];
                     }
                     left.realLen = degree - 1;
-                    BNode right = new BNode(degree, this);
+                    var right = new BNode(degree, this);
                     for (int i = 0; i < degree; i++)
                     {
                         if (i != degree - 1)
@@ -342,7 +286,7 @@ namespace Task3._1
                     right.parent = parent;
                     for (int i = 0; i < parent.realLen; i++)
                     {
-                        if (parent.values[i].Key > middle.Key)
+                        if (middle.Key.CompareTo(parent.values[i].Key) == -1)
                         {
                             for (int j = parent.realLen - 1; j >= i; j--)
                             {
@@ -370,6 +314,49 @@ namespace Task3._1
                     return;
                 }
             }
+
+            private void InsertChild(int index, Data data)
+            {
+                values[realLen] = new Data("", "");
+                for (int j = realLen - 1; j >= index; j--)
+                {
+                    values[j + 1].Key = values[j].Key;
+                    values[j + 1].Value = values[j].Value;
+                }
+                values[index] = data;
+                realLen++;
+            }
+
+            private Data GetData(string key)
+            {
+                if (isLeaf)
+                {
+                    for (int i = 0; i < realLen; i++)
+                    {
+                        if (key.CompareTo(values[i].Key) == 0)
+                        {
+                            return values[i];
+                        }
+                    }
+                    throw new ArgumentOutOfRangeException("Value not found");
+                }
+                for (int i = 0; i < realLen; i++)
+                {
+                    if (key.CompareTo(values[i].Key) == 0)
+                    {
+                        return values[i];
+                    }
+                    if (key.CompareTo(values[i].Key) == -1)
+                    {
+                        return children[i].GetData(key);
+                    }
+                }
+                if (key.CompareTo(values[realLen - 1].Key) == 1)
+                {
+                    return children[realLen].GetData(key);
+                }
+                throw new ArgumentOutOfRangeException("Value not found");
+            }
         }
 
         /// <summary>
@@ -377,7 +364,7 @@ namespace Task3._1
         /// </summary>
         private class Data
         {
-            public Data(int key, int value)
+            public Data(string key, string value)
             {
                 Key = key;
                 Value = value;
@@ -388,9 +375,9 @@ namespace Task3._1
                 return new Data(Key, Value);
             }
 
-            public int Key { get; set; }
+            public string Key { get; set; }
 
-            public int Value { get; set; }
+            public string Value { get; set; }
         }
     }
 }
